@@ -48,6 +48,7 @@ const createIdea = async (payload: IcreateIdeaPayload) => {
         votes: true,
         feedback: true,
         purchases: true,
+        booking: true,
       },
     });
 
