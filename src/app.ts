@@ -1,11 +1,8 @@
+import { envVars } from "./app/config/env";
 import express, { Application, NextFunction, Request, Response } from "express";
-import { prisma } from "./app/lib/prisma";
 import { appRouter } from "./app/routes/index";
 import cookieParser from "cookie-parser";
 import { PaymentController } from "./app/module/payment/payment.controller";
-import cron from "node-cron";
-import { ideaService } from "./app/module/idea/idea.services";
-import { envVars } from "./app/config/env";
 import cors from "cors";
 // import AppError from "./app/errorHelper.ts/AppError";
 // import status from "http-status";

@@ -69,6 +69,14 @@ export const cheakAuth = (...authRoles) => async (req, res, next) => {
             !authRoles.includes(verifiedToken.data.role)) {
             throw new AppError(status.FORBIDDEN, "Forbidden access! You do not have permission to access this resource.");
         }
+        // session থেকে set না হলে JWT থেকে set করো
+        if (!req.user) {
+            req.user = {
+                userId: verifiedToken.data.userId,
+                role: verifiedToken.data.role,
+                email: verifiedToken.data.email,
+            };
+        }
         next();
     }
     catch (error) {

@@ -30,44 +30,56 @@ const createIdea = async (payload: IcreateIdeaPayload) => {
     seatConfig,
   } = payload;
 
-  const result = await prisma.$transaction(async (tx) => {
-    const ideaData = await tx.idea.create({
+  const ideaData = await prisma.idea.create({
+    data: {
+      title,
+      problemStatement,
+      solutinon,
+      description,
+      images,
+      categoryId,
+      authorId,
+      price,
+    },
+    include: {
+      author: true,
+      category: true,
+      votes: true,
+      feedback: true,
+      purchases: true,
+      bookings: true,
+      seatConfig: true,
+    },
+  });
+
+  if (seatConfig) {
+    await prisma.eventSeatConfig.create({
       data: {
-        title,
-        problemStatement,
-        solutinon,
-        description,
-        images,
-        categoryId,
-        authorId,
-        price,
+        ideaId: ideaData.id,
+        totalSeats: seatConfig.totalSeats,
+        startTime: new Date(seatConfig.startTime),
+        endTime: new Date(seatConfig.endTime),
+        venue: seatConfig.venue,
       },
+    });
+
+    // seatConfig create হওয়ার পরে আবার fetch করো
+    const updatedIdea = await prisma.idea.findUnique({
+      where: { id: ideaData.id },
       include: {
         author: true,
         category: true,
         votes: true,
         feedback: true,
         purchases: true,
-        booking: true,
+        bookings: true,
+        seatConfig: true,
       },
     });
+    return updatedIdea;
+  }
 
-    if (seatConfig) {
-      await tx.eventSeatConfig.create({
-        data: {
-          ideaId: ideaData.id,
-          totalSeats: seatConfig.totalSeats,
-          startTime: new Date(seatConfig.startTime),
-          endTime: new Date(seatConfig.endTime),
-          venue: seatConfig.venue,
-        },
-      });
-    }
-
-    return ideaData;
-  });
-
-  return result;
+  return ideaData;
 };
 
 const getAllIdeas = async (query: IQueryParams) => {
@@ -98,6 +110,7 @@ const getAllIdeas = async (query: IQueryParams) => {
       votes: true,
       feedback: true,
       purchases: true,
+      seatConfig: true,
     })
     .dynamicInclude(ideaIncludeConfig)
     .execute();
@@ -113,6 +126,8 @@ const getIdeaById = async (id: string) => {
       votes: true,
       feedback: true,
       purchases: true,
+      seatConfig: true,
+      bookings: true,
     },
   });
   return idea;

@@ -3,7 +3,6 @@ import { Role, USER_STATUS } from "../../generated/prisma/enums";
 import { cookieUtil } from "../utiles/cookie";
 import AppError from "../errorHelper.ts/AppError";
 import status from "http-status";
-import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "../lib/prisma";
 import { jwtUtils } from "../utiles/jwt";
 import { envVars } from "../config/env";
@@ -118,6 +117,15 @@ export const cheakAuth =
           status.FORBIDDEN,
           "Forbidden access! You do not have permission to access this resource.",
         );
+      }
+
+      // session থেকে set না হলে JWT থেকে set করো
+      if (!req.user) {
+        req.user = {
+          userId: verifiedToken.data!.userId,
+          role: verifiedToken.data!.role as Role,
+          email: verifiedToken.data!.email,
+        };
       }
 
       next();

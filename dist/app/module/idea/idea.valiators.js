@@ -30,6 +30,17 @@ const createIdeaZodSchema = z.object({
         .number()
         .positive("Price must be a positive number")
         .optional(),
+    seatConfig: z
+        .object({
+        totalSeats: z.coerce
+            .number()
+            .int()
+            .positive("Total seats must be a positive number"),
+        startTime: z.string().min(1, "Start time is required"),
+        endTime: z.string().min(1, "End time is required"),
+        venue: z.string().optional(),
+    })
+        .optional(),
 });
 const updateIdeaStatusZodSchema = z.object({
     ideaId: z.string().min(1, "ideaId is required"),

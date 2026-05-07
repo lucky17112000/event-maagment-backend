@@ -1,8 +1,8 @@
+import { envVars } from "./app/config/env.js";
 import express from "express";
 import { appRouter } from "./app/routes/index.js";
 import cookieParser from "cookie-parser";
 import { PaymentController } from "./app/module/payment/payment.controller.js";
-import { envVars } from "./app/config/env.js";
 import cors from "cors";
 // import AppError from "./app/errorHelper.ts/AppError.js";
 // import status from "http-status";

@@ -4,8 +4,8 @@ import { prisma } from "../../lib/prisma.js";
 import { QueryBuilder } from "../../utiles/QueryBuilder.js";
 import { ideaFilterableFields, ideaIncludeConfig, ideaSearchableFields, } from "./idea.constant.js";
 const createIdea = async (payload) => {
-    const { title, problemStatement, solutinon, description, images, categoryId, authorId, price, } = payload;
-    const IdeaData = await prisma.idea.create({
+    const { title, problemStatement, solutinon, description, images, categoryId, authorId, price, seatConfig, } = payload;
+    const ideaData = await prisma.idea.create({
         data: {
             title,
             problemStatement,
@@ -22,9 +22,36 @@ const createIdea = async (payload) => {
             votes: true,
             feedback: true,
             purchases: true,
+            bookings: true,
+            seatConfig: true,
         },
     });
-    return IdeaData;
+    if (seatConfig) {
+        await prisma.eventSeatConfig.create({
+            data: {
+                ideaId: ideaData.id,
+                totalSeats: seatConfig.totalSeats,
+                startTime: new Date(seatConfig.startTime),
+                endTime: new Date(seatConfig.endTime),
+                venue: seatConfig.venue,
+            },
+        });
+        // seatConfig create হওয়ার পরে আবার fetch করো
+        const updatedIdea = await prisma.idea.findUnique({
+            where: { id: ideaData.id },
+            include: {
+                author: true,
+                category: true,
+                votes: true,
+                feedback: true,
+                purchases: true,
+                bookings: true,
+                seatConfig: true,
+            },
+        });
+        return updatedIdea;
+    }
+    return ideaData;
 };
 const getAllIdeas = async (query) => {
     const normalizedQuery = { ...query };
@@ -51,6 +78,7 @@ const getAllIdeas = async (query) => {
         votes: true,
         feedback: true,
         purchases: true,
+        seatConfig: true,
     })
         .dynamicInclude(ideaIncludeConfig)
         .execute();
@@ -65,6 +93,8 @@ const getIdeaById = async (id) => {
             votes: true,
             feedback: true,
             purchases: true,
+            seatConfig: true,
+            bookings: true,
         },
     });
     return idea;

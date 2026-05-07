@@ -1,12 +1,10 @@
 import { Router } from "express";
-import { bookingController } from "./booking.controller";
-import { cheakAuth } from "../../midddlware/cheakAuth";
-import { Role } from "../../../generated/prisma/enums";
-
+import { bookingController } from "./booking.controller.js";
+import { cheakAuth } from "../../midddlware/cheakAuth.js";
+import { Role } from "../../../generated/prisma/enums.js";
 const router = Router();
 router.post("/", cheakAuth(Role.USER), bookingController.createBooking);
 router.patch("/status", cheakAuth(Role.ADMIN), bookingController.updateBookingStatus);
 router.get("/my-bookings", cheakAuth(Role.USER), bookingController.getMyBooking);
 router.get("/:ideaId", cheakAuth(Role.ADMIN), bookingController.getBookingsByIdea);
-
 export const bookingRouter = router;
