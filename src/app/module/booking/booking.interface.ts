@@ -1,4 +1,4 @@
-export interface IcreateIdeaPayload {
+export interface IcreateBookingPayload {
   ideaId: string;
   seatCount: number;
 }

@@ -3,12 +3,16 @@ import status from "http-status";
 import AppError from "../../errorHelper.ts/AppError";
 import { IRequestUser } from "../../interface/requestUser.interface";
 import { prisma } from "../../lib/prisma";
-import { IcreateIdeaPayload } from "./booking.interface";
+
 import { randomUUID } from "crypto";
 import { Role } from "../../../generated/prisma/enums";
+import {
+  IcreateBookingPayload,
+  IUpdateBookingStatusPayload,
+} from "./booking.interface";
 
 const createBooking = async (
-  payload: IcreateIdeaPayload,
+  payload: IcreateBookingPayload,
   user: IRequestUser,
 ) => {
   const { ideaId, seatCount } = payload;
@@ -70,6 +74,10 @@ const createBooking = async (
         idea: { select: { title: true } },
         seatConfig: { select: { venue: true, startTime: true, endTime: true } },
       },
+    });
+    await tx.eventSeatConfig.update({
+      where: { id: seatConfig.id },
+      data: { bookedSeats: { increment: seatCount } },
     });
     return newBooking;
   });
@@ -152,8 +160,23 @@ const getBookingsByIdea = async (ideaId: string, user: IRequestUser) => {
   };
 };
 
+const updateBookingStatus = async (
+  payload: IUpdateBookingStatusPayload,
+  user: IRequestUser,
+) => {
+  if (user.role !== Role.ADMIN) {
+    throw new AppError(status.FORBIDDEN, "Only admin can access this resource");
+  }
+  const update = await prisma.booking.update({
+    where: { id: payload.bookingId },
+    data: { status: payload.status },
+  });
+  return update;
+};
+
 export const bookingService = {
   createBooking,
   getMyBooking,
   getBookingsByIdea,
+  updateBookingStatus,
 };
