@@ -1,0 +1,24 @@
+/*
+
+model Purchase {
+    id     String @id @default(uuid())
+    ideaId String
+    idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    paymentStatus PaymentStatus @default(UNPAID)
+    payment       Payment?
+    createdAt     DateTime      @default(now())
+    updatedAt     DateTime      @updatedAt
+
+    @@index([ideaId])
+    @@index([userId])
+    @@map("purchases")
+}
+
+*/
+export interface ICreatePurchasePayload {
+  ideaId: string;
+  userId: string;
+}

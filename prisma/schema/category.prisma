@@ -1,0 +1,6 @@
+model Category {
+    id    String @id @default(uuid())
+    name  String
+    //!SECTION idea will be implemanted in the future
+    ideas Idea[]
+}

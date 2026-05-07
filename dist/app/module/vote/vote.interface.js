@@ -1,0 +1,23 @@
+/*
+
+model Vote {
+    id        String    @id @default(uuid())
+    ideaId    String
+    idea      Idea      @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+    userId    String
+    user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    type      VOTE_TYPE
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+
+    @@index([ideaId])
+    @@index([userId])
+    @@map("votes")
+}
+
+*/
+export var VOTE_TYPE;
+(function (VOTE_TYPE) {
+    VOTE_TYPE["UP"] = "UP";
+    VOTE_TYPE["DOWN"] = "DOWN";
+})(VOTE_TYPE || (VOTE_TYPE = {}));

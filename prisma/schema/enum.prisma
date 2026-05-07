@@ -1,0 +1,43 @@
+enum Role {
+    USER
+    ADMIN
+}
+
+enum USER_STATUS {
+    ACTIVE
+    BLOCKED
+    DELETED
+}
+
+enum IDEA_STATUS {
+    UNDER_REVIEW
+    APPROVED
+    REJECTED
+    PUBLISHED
+    ARCHIVED
+}
+
+enum PaymentStatus {
+    PAID
+    UNPAID
+}
+
+enum FEEDBACK_REASON {
+    FEASIBILITY_ISSUE
+    INCOMPLETE
+    DUPLICATE_IDEA
+    IRRELEVANT
+
+    OTHER
+}
+
+enum VOTE_TYPE {
+    UP
+    DOWN
+}
+
+enum BOOKING_STATUS {
+    CONFIRMED
+    ATTENDED
+    NO_SHOW
+}

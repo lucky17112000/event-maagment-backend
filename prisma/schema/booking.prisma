@@ -1,0 +1,34 @@
+model EventSeatConfig {
+    id          String    @id @default(uuid())
+    ideaId      String    @unique
+    idea        Idea      @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+    totalSeats  Int
+    bookedSeats Int       @default(0)
+    startTime   DateTime
+    endTime     DateTime
+    venue       String?
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    bookings    Booking[]
+
+    @@map("event_seat_config")
+}
+
+model Booking {
+    id           String          @id @default(uuid())
+    userId       String
+    user         User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+    ideaId       String
+    idea         Idea            @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+    seatConfigId String
+    seatConfig   EventSeatConfig @relation(fields: [seatConfigId], references: [id], onDelete: Cascade)
+    seatCount    Int             @default(1)
+    bookingCode  String          @unique
+    status       BOOKING_STATUS  @default(CONFIRMED)
+    createdAt    DateTime        @default(now())
+    updatedAt    DateTime        @updatedAt
+
+    @@index([userId])
+    @@index([ideaId])
+    @@map("booking")
+}

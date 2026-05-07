@@ -1,0 +1,24 @@
+model Payment {
+    id     String @id @default(uuid())
+    ideaId String
+    idea   Idea   @relation(fields: [ideaId], references: [id], onDelete: Cascade)
+
+    amount             Float
+    transactionId      String        @unique
+    stripeEventId      String?       @unique
+    status             PaymentStatus @default(UNPAID)
+    paymentDate        DateTime      @default(now())
+    inVoiceUrl         String?
+    paymentGatewayData Json?
+    createdAt          DateTime      @default(now())
+    updatedAt          DateTime      @updatedAt
+    purchaseId         String?       @unique
+
+    purchase Purchase? @relation(fields: [purchaseId], references: [id])
+    user     User?     @relation(fields: [userId], references: [id])
+    userId   String?
+
+    @@index([ideaId])
+    @@index([transactionId])
+    @@map("payments")
+}
