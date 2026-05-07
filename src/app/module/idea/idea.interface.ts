@@ -41,6 +41,13 @@ export interface IcreateIdeaPayload {
   categoryId: string;
   authorId: string;
   price?: number;
+
+  seatConfig?: {
+    totalSeats: number;
+    startTime: string;
+    endTime: string;
+    venue?: string;
+  };
 }
 
 export interface IUpdateIdeaPayload {

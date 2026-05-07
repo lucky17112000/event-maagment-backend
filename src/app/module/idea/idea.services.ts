@@ -27,28 +27,46 @@ const createIdea = async (payload: IcreateIdeaPayload) => {
     categoryId,
     authorId,
     price,
+    seatConfig,
   } = payload;
 
-  const IdeaData = await prisma.idea.create({
-    data: {
-      title,
-      problemStatement,
-      solutinon,
-      description,
-      images,
-      categoryId,
-      authorId,
-      price,
-    },
-    include: {
-      author: true,
-      category: true,
-      votes: true,
-      feedback: true,
-      purchases: true,
-    },
+  const result = await prisma.$transaction(async (tx) => {
+    const ideaData = await tx.idea.create({
+      data: {
+        title,
+        problemStatement,
+        solutinon,
+        description,
+        images,
+        categoryId,
+        authorId,
+        price,
+      },
+      include: {
+        author: true,
+        category: true,
+        votes: true,
+        feedback: true,
+        purchases: true,
+      },
+    });
+
+    if (seatConfig) {
+      await tx.eventSeatConfig.create({
+        data: {
+          ideaId: ideaData.id,
+          totalSeats: seatConfig.totalSeats,
+          startTime: new Date(seatConfig.startTime),
+          endTime: new Date(seatConfig.endTime),
+          venue: seatConfig.venue,
+        },
+      });
+    }
+
+    return ideaData;
   });
-  return IdeaData;
+
+  return result;
 };
 
 const getAllIdeas = async (query: IQueryParams) => {
