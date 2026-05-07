@@ -5,6 +5,7 @@ import { IRequestUser } from "../../interface/requestUser.interface";
 import { prisma } from "../../lib/prisma";
 import { IcreateIdeaPayload } from "./booking.interface";
 import { randomUUID } from "crypto";
+import { Role } from "../../../generated/prisma/enums";
 
 const createBooking = async (
   payload: IcreateIdeaPayload,
@@ -73,4 +74,86 @@ const createBooking = async (
     return newBooking;
   });
   return booking;
+};
+
+const getMyBooking = async (user: IRequestUser) => {
+  if (!user) {
+    throw new AppError(status.UNAUTHORIZED, "Unauthorized");
+  }
+  if (user.role !== Role.USER) {
+    throw new AppError(status.FORBIDDEN, "Its only for users");
+  }
+  const bookings = await prisma.booking.findMany({
+    where: { userId: user.userId },
+    include: {
+      idea: {
+        select: {
+          title: true,
+          images: true,
+          category: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      },
+      seatConfig: {
+        select: {
+          venue: true,
+          startTime: true,
+          endTime: true,
+          totalSeats: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return bookings;
+};
+
+const getBookingsByIdea = async (ideaId: string, user: IRequestUser) => {
+  if (user.role !== Role.ADMIN) {
+    throw new AppError(status.FORBIDDEN, "Only admin can access this resource");
+  }
+
+  const seatConfig = await prisma.eventSeatConfig.findUnique({
+    where: { ideaId },
+    select: {
+      totalSeats: true,
+      bookedSeats: true,
+      venue: true,
+      startTime: true,
+      endTime: true,
+    },
+  });
+  if (!seatConfig) {
+    throw new AppError(status.NOT_FOUND, "No seat config found for this event");
+  }
+  const bookings = await prisma.booking.findMany({
+    where: { ideaId },
+    include: {
+      user: {
+        select: {
+          name: true,
+          email: true,
+          image: true,
+        },
+      },
+    },
+    orderBy: { createdAt: "desc" },
+  });
+  return {
+    seatConfig,
+    availableSeats: seatConfig.totalSeats - seatConfig.bookedSeats,
+    totalBookings: bookings.length,
+    bookings,
+  };
+};
+
+export const bookingService = {
+  createBooking,
+  getMyBooking,
+  getBookingsByIdea,
 };
