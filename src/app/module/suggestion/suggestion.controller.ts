@@ -19,7 +19,7 @@ export const suggestionController = async (req: Request, res: Response) => {
       },
       status: "APPROVED",
     },
-    select: { id: true, title: true },
+    select: { id: true, title: true, solution: true, description: true },
     take: 10,
   });
 
