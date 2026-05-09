@@ -67,6 +67,10 @@ const getAllIdeas = async (query) => {
         filterableFields: ideaFilterableFields,
     });
     const result = await queryBuilder
+        .where({
+        isDeleted: false,
+        status: "APPROVED",
+    })
         .search()
         .filter()
         .sort()
@@ -205,7 +209,7 @@ const getOneUserAllIdeas = async (userId, query) => {
         filterableFields: ideaFilterableFields,
     });
     const result = await queryBuilder
-        .where({ authorId: userId })
+        .where({ authorId: userId, isDeleted: false })
         .search()
         .filter()
         .sort()

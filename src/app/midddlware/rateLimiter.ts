@@ -6,7 +6,7 @@ const redis = Redis.fromEnv();
 //difrent limiter for diffrent routes
 const apiLimiter = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(2, "10 s"),
+  limiter: Ratelimit.slidingWindow(10, "10 s"),
   analytics: true,
 });
 //middlware to use the limiter
