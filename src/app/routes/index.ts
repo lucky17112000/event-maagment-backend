@@ -8,6 +8,7 @@ import { voteRouter } from "../module/vote/vote.route";
 import { purchaseRouter } from "../module/purchase/purchase.route";
 import { adminRoute } from "../module/admin/admin.route";
 import { bookingRouter } from "../module/booking/booking.route";
+import { suggestionRoute } from "../module/suggestion/suggestion.route";
 
 // import { chatRouter } from "../module/chat/chat.router";
 
@@ -21,5 +22,6 @@ router.use("/purchase", purchaseRouter);
 router.use("/admin", adminRoute);
 // router.use("/chat", chatRouter);
 router.use("/booking", bookingRouter);
+router.use("/suggestions", suggestionRoute);
 
 export const appRouter = router;
