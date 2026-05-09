@@ -16,7 +16,7 @@ router.post(
   ideaController.createIdea,
 );
 //  cheakAuth(Role.USER, Role.ADMIN),
-router.get("/", rateLimitMiddleware, ideaController.getAllIdeas);
+router.get("/", ideaController.getAllIdeas);
 router.get("/:id", rateLimitMiddleware, ideaController.getIdeayId);
 // router.put("/:id", ideaController.updateIdea);
 router.get(
