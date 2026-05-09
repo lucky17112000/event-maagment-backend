@@ -5,29 +5,36 @@ import { ideaValidator } from "./idea.valiators";
 import { cheakAuth } from "../../midddlware/cheakAuth";
 import { Role } from "../../../generated/prisma/enums";
 import { multerUpload } from "../../config/multer.config";
+import { rateLimitMiddleware } from "../../midddlware/rateLimiter";
 
 const router = Router();
 router.post(
   "/",
-
+  rateLimitMiddleware,
   multerUpload.array("files"),
   validateRequest(ideaValidator.createIdeaZodSchema),
   ideaController.createIdea,
 );
 //  cheakAuth(Role.USER, Role.ADMIN),
-router.get("/", ideaController.getAllIdeas);
-router.get("/:id", ideaController.getIdeayId);
+router.get("/", rateLimitMiddleware, ideaController.getAllIdeas);
+router.get("/:id", rateLimitMiddleware, ideaController.getIdeayId);
 // router.put("/:id", ideaController.updateIdea);
-router.get("/home/limited", ideaController.getLimitedIdeaForHomePage);
+router.get(
+  "/home/limited",
+  rateLimitMiddleware,
+  ideaController.getLimitedIdeaForHomePage,
+);
 
 router.put(
   "/status",
+  rateLimitMiddleware,
   cheakAuth(Role.ADMIN),
   validateRequest(ideaValidator.updateIdeaStatusZodSchema),
   ideaController.updateIdeaStatuswithFeedback,
 );
 router.put(
   "/change-ispaid",
+  rateLimitMiddleware,
   cheakAuth(Role.ADMIN),
 
   validateRequest(ideaValidator.changeIsPaidZodSchema),
@@ -43,6 +50,7 @@ router.put(
 );
 router.delete(
   "/soft/by-admin",
+  rateLimitMiddleware,
   cheakAuth(Role.ADMIN),
   ideaController.deleteIdeaSoftByAdmin,
 );

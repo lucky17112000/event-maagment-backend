@@ -59,7 +59,7 @@ app.get("/", async (req, res, next) => {
     // );
     res.status(200).json({
         success: true,
-        message: "Welcome to Eco spark API",
+        message: "Welcome Event Management System API",
     });
 });
 //basic route
