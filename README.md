@@ -1,6 +1,8 @@
-# EcoSpark Backend
+# Event Hub Backend
 
-A TypeScript + Express backend for the EcoSpark platform with authentication, ideas, feedback, voting, purchase/payment flows, and admin APIs.
+A TypeScript + Express backend for the Event Hub platform with authentication, ideas, feedback, voting, purchase/payment flows, and admin APIs.
+
+This is Event Hub.
 
 ## Tech Stack
 
@@ -37,6 +39,20 @@ Example:
 
 - Auth register: `POST /api/v1/auth/register`
 - Auth login: `POST /api/v1/auth/login`
+
+## Rate Limiting (Implemented)
+
+Backend rate limiting is implemented using Upstash Redis + Upstash Ratelimit with the sliding window algorithm.
+
+- Policy: `60 requests / 1 minute` per client IP
+- Middleware: `src/app/midddlware/rateLimiter.ts`
+- Response headers:
+  - `X-RateLimit-Limit`
+  - `X-RateLimit-Remaining`
+  - `X-RateLimit-Reset`
+- Blocked requests return: `429 Too Many Requests`
+
+Rate limiting is currently wired into multiple routes, including admin, vote, booking, and idea modules.
 
 ## Available API Modules
 
@@ -144,5 +160,5 @@ vercel --prod
 
 ## Notes
 
-- Use `https://ecospark-backend.vercel.app` as the stable production backend URL.
+- Use your Event Hub production backend URL as the stable backend URL.
 - Use that backend domain (not Vercel dashboard URL) in `BETTER_AUTH_URL`.
