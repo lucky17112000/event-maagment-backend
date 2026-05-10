@@ -1,0 +1,23 @@
+/*
+
+model Blog {
+    id        String   @id @default(uuid())
+    title     String
+    content   String
+    authorId  String
+    Image     String?
+    views     Int      @default(0)
+    author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([authorId])
+    @@map("blogs")
+}
+*/
+export interface ICreateBlogPayload {
+  title: string;
+  content: string;
+  authorId: string;
+  image?: string;
+}

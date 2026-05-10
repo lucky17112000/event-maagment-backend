@@ -9,7 +9,7 @@ import { rateLimitMiddleware } from "../../midddlware/rateLimiter.js";
 const router = Router();
 router.post("/", rateLimitMiddleware, multerUpload.array("files"), validateRequest(ideaValidator.createIdeaZodSchema), ideaController.createIdea);
 //  cheakAuth(Role.USER, Role.ADMIN),
-router.get("/", rateLimitMiddleware, ideaController.getAllIdeas);
+router.get("/", ideaController.getAllIdeas);
 router.get("/:id", rateLimitMiddleware, ideaController.getIdeayId);
 // router.put("/:id", ideaController.updateIdea);
 router.get("/home/limited", rateLimitMiddleware, ideaController.getLimitedIdeaForHomePage);

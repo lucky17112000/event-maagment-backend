@@ -232,26 +232,75 @@ const getAdminDashboardStats = async (user: IRequestUser) => {
     where: { role: "ADMIN" },
   });
   //Energy ,Plastic, Tree,Others
-  const totalEnergyIdeas = await prisma.idea.count({
-    where: { category: { name: "Energy" } },
+  // const totalEnergyIdeas = await prisma.idea.count({
+  //   where: { category: { name: "" } },
+  // });
+  const totalFitnessWorkshop = await prisma.idea.count({
+    where: { category: { name: "Fitness Workshop" } },
   });
-  const totalPlasticIdeas = await prisma.idea.count({
-    where: { category: { name: "Plastic" } },
+  // const totalPlasticIdeas = await prisma.idea.count({
+  //   where: { category: { name: "Plastic" } },
+  // });
+  //total hacakaton
+  const totalHacakaton = await prisma.idea.count({
+    where: { category: { name: "Hackaton" } },
   });
-  const totalTreeIdeas = await prisma.idea.count({
-    where: { category: { name: "Tree" } },
+  //total Fashion Show
+  const totalFashionShow = await prisma.idea.count({
+    where: { category: { name: "Fashion Show" } },
   });
-  const totalOthersIdeas = await prisma.idea.count({
-    where: { category: { name: "Others" } },
+  // total Webiner
+  const totalWebiner = await prisma.idea.count({
+    where: { category: { name: "Webiner" } },
+  });
+  // total Music Concert
+  const totalMusicConcert = await prisma.idea.count({
+    where: { category: { name: "Music Concert" } },
+  });
+  // total Seminaer
+  const totalSeminaer = await prisma.idea.count({
+    where: { category: { name: "Seminaer" } },
+  });
+  // Marrige Ceremony
+  const totalMarrigeCeremony = await prisma.idea.count({
+    where: { category: { name: "Marrige Ceremony" } },
+  });
+  // Art Exhibition
+  const totalArtExhibition = await prisma.idea.count({
+    where: { category: { name: "Art Exhibition" } },
+  });
+  // Conference
+  const totalConference = await prisma.idea.count({
+    where: { category: { name: "Conference" } },
+  });
+  // Science Fair
+  const totalScienceFair = await prisma.idea.count({
+    where: { category: { name: "Science Fair" } },
+  });
+  //  Workshop
+  const totalWorkshop = await prisma.idea.count({
+    where: { category: { name: "Workshop" } },
+  });
+  // Sports Tournament
+  const totalSportsTournament = await prisma.idea.count({
+    where: { category: { name: "Sports Tournament" } },
   });
 
   return {
     totalUsers,
     totalAdmins,
-    totalEnergyIdeas,
-    totalPlasticIdeas,
-    totalTreeIdeas,
-    totalOthersIdeas,
+    totalFitnessWorkshop,
+    totalHacakaton,
+    totalFashionShow,
+    totalWebiner,
+    totalMusicConcert,
+    totalSeminaer,
+    totalMarrigeCeremony,
+    totalArtExhibition,
+    totalConference,
+    totalScienceFair,
+    totalWorkshop,
+    totalSportsTournament,
   };
 };
 //individual user idea count, approved idea count, total vote count catcjh by user
